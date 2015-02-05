@@ -1,0 +1,119 @@
+<table class="table">
+  <thead>
+    <tr><th>> COMMAND Redis: KEYS sidekiq-wat-da-shit*</th></tr>
+  </thead>
+  <tbody>
+    <% @redis.keys('sidekiq-wat-da-shit*').each do |k| %>
+    <tr><td><%= k %> : <%= @redis.type(k) %></td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr><th>> COMMAND Redis: SMEMBERS sidekiq-wat-da-shit:queues</th></tr>
+  </thead>
+  <tbody>
+    <% @redis.smembers('sidekiq-wat-da-shit:queues').each do |m| %>
+    <tr><td><%= m %></td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr><th>> COMMAND Redis: LRANGE sidekiq-wat-da-shit:queue:default 0 -1</th></tr>
+  </thead>
+  <tbody>
+    <% @redis.lrange('sidekiq-wat-da-shit:queue:default', 0, -1).each do |r| %>
+    <tr><td><%= r %></td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>> COMMAND Redis: SMEMBERS sidekiq-wat-da-shit:processes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @redis.smembers('sidekiq-wat-da-shit:processes').each do |p| %>
+    <% key = "sidekiq-wat-da-shit:#{ p }" %>
+    <tr>
+      <td><%= p %> : <%= @redis.type(key) %></td>
+    </tr>
+    <tr>
+      <td>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>> COMMAND Redis: HGETALL <%= key %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @redis.hgetall(key).each do |w| %>
+            <tr><td><%= w %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>> COMMAND Redis: HGETALL <%= key %>:workers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @redis.hgetall("#{ key }:workers").each do |w| %>
+            <tr><td><%= w %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>> COMMAND Redis: GET sidekiq-wat-da-shit:stat:processed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= @redis.get('sidekiq-wat-da-shit:stat:processed') %></td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>> COMMAND Redis: ZRANGE sidekiq-wat-da-shit:retry 0 -1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @redis.zrange('sidekiq-wat-da-shit:retry', 0, -1).each do |r| %>
+    <tr>
+      <td><%= r %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>> COMMAND Redis: ZRANGE sidekiq-wat-da-shit:dead 0 -1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @redis.zrange('sidekiq-wat-da-shit:dead', 0, -1).each do |r| %>
+    <tr>
+      <td><%= r %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
